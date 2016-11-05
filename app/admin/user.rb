@@ -14,6 +14,17 @@ ActiveAdmin.register User do
 # end
   permit_params :full_name, :email, :password, :password_confirmation, :role, :avatar, :vk_avatar
 
+  controller do
+ 
+  def update
+    if params[:user][:password].blank?
+      params[:user].delete("password")
+      params[:user].delete("password_confirmation")
+    end
+    super
+  end
+ 
+end
 
   index do
     selectable_column
@@ -31,9 +42,12 @@ ActiveAdmin.register User do
   end
 
   form do |f|
-    f.inputs "Admin Details" do
+    f.inputs "User Details" do
       f.input :full_name
       f.input :role,  :collection => ["student","teacher"]
+      f.input :email
+      f.input :password
+      f.input :password_confirmation
       f.inputs "Attachment", :multipart => true do
         f.input :vk_avatar, height: "100px"
       end
